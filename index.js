@@ -1,11 +1,19 @@
-// Required packages
+// References
+// Checking if a file exists
+// 1. https://sebhastian.com/node-check-if-file-exists/
+//
+// Deleting a file using fs
+// 2. https://www.tutorialkart.com/nodejs/delete-a-file-in-nodejs-using-node-fs/
 
+// Required packages
 const inquirer = require('inquirer');
 const fs = require('fs');
 
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
+
+const path = './dist/index.html';
 
 // When managerQuestions() is called...
 // First, the user is prompted to fill out the manager info (Name, ID, Email, and Office Number)
@@ -22,8 +30,16 @@ const Intern = require('./lib/Intern');
     // Then, that information is saved to newIntern and written to the file
 // The user is asked if they want to add another employee, restarting the loop
 // If no, the closing html tags are generated and the html file is complete. 
+const questions = () => {
+    
+    // Checks to see if an index.html exists
+    // If yes, it deletes it before creating a new one 
+    if (fs.existsSync(path)) {
+        fs.unlink('./dist/index.html', function (err) {
+            if (err) throw err;
+        });
+    } 
 
-const managerQuestions = () => {
     inquirer
         .prompt([
             {
@@ -49,16 +65,14 @@ const managerQuestions = () => {
         ])
     .then((data) => {
 
-        console.log(data)
         const nameBasic = data.name;
         const employeeBasic= data.id;
         const emailBasic = data.email;
         const officeManager = data.office;
 
         const newManager = new Manager (nameBasic, employeeBasic, emailBasic, officeManager);
-        console.log(newManager)
         
-        writeToFile('index.html', generateManagerHTML(newManager));
+        writeToFile('./dist/index.html', generateManagerHTML(newManager));
 
         const addAnother = () => {
             inquirer
@@ -71,7 +85,7 @@ const managerQuestions = () => {
                     if (answers.another) {
                         return employeeQuestions()
                     } else {
-                        writeToFile('index.html', generateClosingHTML());  
+                        writeToFile('./dist/index.html', generateClosingHTML());  
                     }
                 })
         }
@@ -127,9 +141,8 @@ const managerQuestions = () => {
                     const githubEngineer = data.engineerGithub;
             
                     const newEngineer = new Engineer (nameEngineer, employeeEngineer, emailEngineer, githubEngineer);
-                    console.log(newEngineer)
                     
-                    writeToFile('index.html', generateEngineerHTML(newEngineer));
+                    writeToFile('./dist/index.html', generateEngineerHTML(newEngineer));
 
                     addAnother();
                 })
@@ -159,7 +172,6 @@ const managerQuestions = () => {
                         message: 'What is the intern\'s School?',
                     }
                 ]).then((data) => {
-                    console.log(data)
 
                     const nameIntern = data.internName;
                     const employeeIntern= data.internId;
@@ -168,7 +180,7 @@ const managerQuestions = () => {
 
                     const newIntern = new Intern (nameIntern, employeeIntern, emailIntern, githubIntern);
 
-                    writeToFile('index.html', generateInternHTML(newIntern));
+                    writeToFile('./dist/index.html', generateInternHTML(newIntern));
 
                     addAnother()
                 })
@@ -185,7 +197,6 @@ function writeToFile(fileName, data) {
 
 // Generates HTML
 // Additionally generates opening html
-
 const generateManagerHTML = (data) => {
 return `<!DOCTYPE html>
 <html lang="en">
@@ -195,7 +206,8 @@ return `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Profile Generator</title>
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./assets/css/reset.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 </head>
 <body>
@@ -246,4 +258,5 @@ const generateEngineerHTML = (data) => {
         }
 
 // Initializes application upon calling 'node index.js'
-managerQuestions();
+questions();
+
