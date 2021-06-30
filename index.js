@@ -1,12 +1,28 @@
 // Required packages
+
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Employee = require('./lib/Employee');
+
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 
-// Array of questions to be passed to the user
+// When managerQuestions() is called...
+// First, the user is prompted to fill out the manager info (Name, ID, Email, and Office Number)
+// Next, that information is saved to newManager and written to the file
+// Then, addAnother() prompts the user to add another team member
+// Then, if yes, they are passed to generateEmployee() -- if no, the closing html tag is added
+// Then, in generateEmployee(), the user is asked if they want an engineer or intern
+    // Then, if engineer, they are passed to engineerQuestions()
+    // Then the user is prompted to fill out the engineer info (Name, ID, Email, GitHub)
+    // Then, that information is saved to newEngineer and written to the file
+    //
+    // Then, id intern, they are passed to internQuestions()
+    // Then the user is prompted to fill out the intern info (Name, ID, Email, School)
+    // Then, that information is saved to newIntern and written to the file
+// The user is asked if they want to add another employee, restarting the loop
+// If no, the closing html tags are generated and the html file is complete. 
+
 const managerQuestions = () => {
     inquirer
         .prompt([
@@ -43,7 +59,6 @@ const managerQuestions = () => {
         console.log(newManager)
         
         writeToFile('index.html', generateManagerHTML(newManager));
-
 
         const addAnother = () => {
             inquirer
@@ -116,8 +131,6 @@ const managerQuestions = () => {
                     
                     writeToFile('index.html', generateEngineerHTML(newEngineer));
 
-
-
                     addAnother();
                 })
         }
@@ -152,10 +165,11 @@ const managerQuestions = () => {
                     const employeeIntern= data.internId;
                     const emailIntern = data.internEmail;
                     const githubIntern = data.internSchool;
-            
+
                     const newIntern = new Intern (nameIntern, employeeIntern, emailIntern, githubIntern);
-                    console.log(newIntern)
+
                     writeToFile('index.html', generateInternHTML(newIntern));
+
                     addAnother()
                 })
         }
@@ -170,6 +184,7 @@ function writeToFile(fileName, data) {
 }
 
 // Generates HTML
+// Additionally generates opening html
 
 const generateManagerHTML = (data) => {
 return `<!DOCTYPE html>
@@ -188,37 +203,40 @@ return `<!DOCTYPE html>
     <div class="boxes"> 
         <h3>${data.nameBasic}</h3>    
         <h2>${data.getRole()}</h2>
-        <p>${data.employeeBasic}</p>
-        <p>${data.emailBasic}</p>
-        <p>${data.getOfficeManager()}</p>
+        <p>ID: ${data.employeeBasic}</p>
+        <p>Email: <a href = "mailto: ${data.emailBasic}">${data.emailBasic}</a></p>
+        <p>Office: ${data.getOfficeManager()}</p>
     </div>
 `
 }
 
+// Generates engineer html text
 const generateEngineerHTML = (data) => {
     return `
         <div class="boxes"> 
             <h3>${data.nameBasic}</h3>    
             <h2>${data.getRole()}</h2>
-            <p>${data.employeeBasic}</p>
-            <p>${data.emailBasic}</p>
-            <p>${data.getGithubEngineer()}</p>
+            <p>ID: ${data.employeeBasic}</p>
+            <p>Email: <a href = "mailto: ${data.emailBasic}">${data.emailBasic}</a></p>
+            <p>Github: <a href=https://github.com/${data.getGithubEngineer()}>${data.getGithubEngineer()}</a></p>
         </div>
     `
 }
 
+// Generates intern html text
     const generateInternHTML = (data) => {
         return `
         <div class="boxes"> 
             <h3>${data.nameBasic}</h3>    
             <h2>${data.getRole()}</h2>
-            <p>${data.employeeBasic}</p>
-            <p>${data.emailBasic}</p>
-            <p>${data.getInternSchool()}</p>
+            <p>ID: ${data.employeeBasic}</p>
+            <p>Email: <a href = "mailto: ${data.emailBasic}">${data.emailBasic}</a></p>
+            <p>School: ${data.getInternSchool()}</p>
         </div>   
     `
 }
 
+//Generates closing hmtl text
         const generateClosingHTML = () => {
         return `
 </div>    
