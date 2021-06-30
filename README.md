@@ -40,4 +40,3 @@
 My GitHub: [CoreyParker12](https://github.com/CoreyParker12)  
 Email: coreyparker012@gmail.com
 
-[Video Walkthrough](https://drive.google.com/file/d/1CWS4xZKjWYAZikvwuJEVe5KKXcTorMPz/view?usp=sharing)
