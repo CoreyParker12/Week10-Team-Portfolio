@@ -2,9 +2,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const Employee = require('./lib/Employee');
-
-//const generateHTML = require('./lib/generateHTML');
-
+const Manager = require('./lib/Manager');
 
 // Array of questions to be passed to the user
 const questions = () => {
@@ -13,25 +11,37 @@ const questions = () => {
             {
                 type: 'input',
                 name: 'name',
-                message: 'What is your name?',
+                message: 'What is the manager\'s name?',
             },
             {
                 type: 'input',
-                name: 'office',
-                message: 'What is your office number?',
+                name: 'id',
+                message: 'What is the manager\'s employee id?',
             },
-
+            {
+                type: 'input',
+                name: 'email',
+                message: 'What is the manager\'s email address?',
+            },            
+            {
+                type: 'input',
+                name: 'office',
+                message: 'What is the manager\'s office number?',
+            },
         ])
-    .then((answers) => {
+    .then((data) => {
         
 
 
-        const employeeName = answers.name;
-        const employeeOffice = answers.office;
+        const nameBasic = data.name;
+        const employeeBasic= data.id;
+        const emailBasic = data.email;
+        const officeManager = data.office;
 
-        const newEmployee = new Employee (employeeName, employeeOffice);
+
+        const newManager = new Manager (nameBasic, employeeBasic, emailBasic, officeManager);
         
-        writeToFile('index.html', generateEmployeeHTML(newEmployee));
+        writeToFile('index.html', generateEmployeeHTML(newManager));
     });
 }
 
@@ -54,7 +64,11 @@ return `<!DOCTYPE html>
     <title>Document</title>
 </head>
 <body>
-    ${data.name}
+    ${data.getRole()}
+    ${data.nameBasic}
+    ${data.employeeBasic}
+    ${data.emailBasic}
+    ${data.officeManager}
 </body>
 </html>`
 }
