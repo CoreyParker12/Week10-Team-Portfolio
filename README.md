@@ -15,9 +15,10 @@
   * [Tests](#tests)
   * [Questions](#questions)
 
-## Installation Instrutions
+## Installation Instructions
 
-  
+  * To install, clone the reposity and run "npm i" to install all needed packages.
+  * Run the application by running "node index.js" in your integrated terminal.
 
 ## Usage
 
@@ -27,12 +28,9 @@
 
   This project is licensed under the terms of the MIT license.  
 
-## Contributing
-
-
-
 ## Tests
 
+  * 4 tests will be used to check that the intended inputs are produced with sample data. 
 
 
 ## Questions
